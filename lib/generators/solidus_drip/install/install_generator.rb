@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SolidusDrip
   module Generators
     class InstallGenerator < Rails::Generators::Base

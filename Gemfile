@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -5,8 +7,8 @@ branch = ENV.fetch('SOLIDUS_BRANCH', 'master')
 gem 'solidus', github: 'solidusio/solidus', branch: branch
 
 # Provides basic authentication functionality for testing parts of your engine
-gem 'solidus_auth_devise'
 gem 'drip-ruby', require: 'drip'
+gem 'solidus_auth_devise'
 
 # This is needed to avoid incompatibilities between this extension and
 # old versions of solidus (< 2.5). This can be reverted when Solidus 2.4
