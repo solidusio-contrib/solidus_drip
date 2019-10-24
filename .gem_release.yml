@@ -1,0 +1,5 @@
+bump:
+  recurse: false
+  file: 'lib/solidus_drip/version.rb'
+  message: Bump SolidusDrip to %{version}
+  branch: true
