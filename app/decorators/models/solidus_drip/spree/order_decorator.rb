@@ -3,17 +3,28 @@
 module SolidusDrip
   module Spree
     module OrderDecorator
+      def self.prepended(base)
+        base.after_create :create_cart_activity
+      end
+
       ##
-      # Sends cart activity to Drip. `action` is calculated based on if the
-      # object was just created or is being updated.
+      # Creates cart activity on Drip
+      #
+      # @see SolidusDrip::ShopperActivity
+      #
+      def create_cart_activity
+        SolidusDrip::ShopperActivity.new(self).cart('created')
+      end
+
+      ##
+      # Updates cart activity on Drip
       #
       # This method is called as part of the Spree::Order.update_hooks
       #
       # @see SolidusDrip::ShopperActivity
       #
-      def record_cart_activity
-        action = created_at_changed? ? 'created' : 'updated'
-        SolidusDrip::ShopperActivity.new(self).cart(action)
+      def update_cart_activity
+        SolidusDrip::ShopperActivity.new(self).cart('updated')
       end
 
       ::Spree::Order.prepend self
