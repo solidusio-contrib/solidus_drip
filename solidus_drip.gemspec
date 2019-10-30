@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", 'LICENSE', 'Rakefile', 'README.md']
   s.test_files = Dir['spec/**/*']
 
+  s.add_dependency 'drip-ruby'
   s.add_dependency 'solidus_core' # Set Solidus version
 
   s.add_development_dependency 'capybara'
