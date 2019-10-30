@@ -15,11 +15,11 @@ module SolidusDrip
     # Cart Activity helps identify cart abandonment.
     # @see https://developer.drip.com/#cart-activity
     #
-    def cart
+    def cart(action = 'updated')
       data = {
         provider: 'solidus',
         email: order.email,
-        action: order.created_at_changed? ? 'created' : 'updated',
+        action: action,
         cart_id: order.id.to_s,
         cart_public_id: order.number,
         grand_total: order.total.to_f,
@@ -43,11 +43,11 @@ module SolidusDrip
       }
 
       response = client.create_cart_activity_event(data)
-      if response.success?
-        response
-      else
-        puts response.body
+      if !response.success?
+        Rails.logger.error("SOLIDUS DRIP | #{response.body.dig('error', 'message')}")
       end
+
+      response
     end
   end
 end
