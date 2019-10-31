@@ -23,7 +23,10 @@ module SolidusDrip
     # the user experience with the site.
     #
     def handle_error_response(response)
-      Rails.logger.error("SOLIDUS DRIP | #{response.body.dig('error', 'message')}")
+      # Some errors come back under the `message` key while others are nested
+      # under `error`
+      error_message = response.body.dig('message') || response.body.dig('error', 'message')
+      Rails.logger.error("SOLIDUS DRIP | #{error_message}")
     end
   end
 end

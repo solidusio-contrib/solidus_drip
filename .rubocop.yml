@@ -221,6 +221,11 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
+Metrics/BlockLength:
+  Exclude:
+    - 'solidus_drip.gemspec'
+    - 'spec/**/*'
+
 Bundler/DuplicatedGem:
   Exclude:
     - 'Gemfile'

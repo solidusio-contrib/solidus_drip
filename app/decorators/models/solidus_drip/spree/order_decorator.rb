@@ -4,15 +4,15 @@ module SolidusDrip
   module Spree
     module OrderDecorator
       def self.prepended(base)
-        base.after_create Proc.new { |order|
-          SolidusDrip::ShopperActivity.new(order).cart_activity('created')
-        }
-        base.state_machine.after_transition to: :complete, do: Proc.new { |order|
-          SolidusDrip::ShopperActivity.new(order).order_activity('placed')
-        }
-        base.state_machine.after_transition to: :canceled, do: Proc.new { |order|
-          SolidusDrip::ShopperActivity.new(order).order_activity('canceled')
-        }
+        base.after_create(proc { |order|
+          order.drip_shopper_activity.cart_activity('created')
+        })
+        base.state_machine.after_transition(to: :complete, do: proc { |order|
+          order.drip_shopper_activity.order_activity('placed')
+        })
+        base.state_machine.after_transition(to: :canceled, do: proc { |order|
+          order.drip_shopper_activity.order_activity('canceled')
+        })
       end
 
       ##
@@ -38,7 +38,7 @@ module SolidusDrip
       end
 
       def drip_shopper_activity
-        SolidusDrip::ShopperActivity.new(self)
+        @drip_shopper_activity ||= SolidusDrip::ShopperActivity.new(self)
       end
 
       ::Spree::Order.prepend self
