@@ -4,27 +4,41 @@ module SolidusDrip
   module Spree
     module OrderDecorator
       def self.prepended(base)
-        base.after_create :create_cart_activity
+        base.after_create Proc.new { |order|
+          SolidusDrip::ShopperActivity.new(order).cart_activity('created')
+        }
+        base.state_machine.after_transition to: :complete, do: Proc.new { |order|
+          SolidusDrip::ShopperActivity.new(order).order_activity('placed')
+        }
+        base.state_machine.after_transition to: :canceled, do: Proc.new { |order|
+          SolidusDrip::ShopperActivity.new(order).order_activity('canceled')
+        }
       end
 
       ##
-      # Creates cart activity on Drip
-      #
-      # @see SolidusDrip::ShopperActivity
-      #
-      def create_cart_activity
-        SolidusDrip::ShopperActivity.new(self).cart_activity('created')
-      end
-
-      ##
-      # Updates cart activity on Drip
+      # Updates activity on Drip
       #
       # This method is called as part of the Spree::Order.update_hooks
       #
       # @see SolidusDrip::ShopperActivity
       #
-      def update_cart_activity
-        SolidusDrip::ShopperActivity.new(self).cart_activity('updated')
+      def update_drip_activity
+        # If the order is complete it is no longer considered cart data
+        if completed?
+          if shipment_state_changed? && shipped?
+            drip_shopper_activity.order_activity('fulfilled')
+          end
+          if payment_state_changed? && paid?
+            drip_shopper_activity.order_activity('paid')
+          end
+          drip_shopper_activity.order_activity('updated')
+        else
+          drip_shopper_activity.cart_activity('updated')
+        end
+      end
+
+      def drip_shopper_activity
+        SolidusDrip::ShopperActivity.new(self)
       end
 
       ::Spree::Order.prepend self

@@ -7,14 +7,16 @@ RSpec.describe Spree::Order do
 
   describe '#create_cart_activity' do
     it "triggers on create" do
-      expect_any_instance_of(SolidusDrip::ShopperActivity).to receive(:cart).with('created')
+      expect_any_instance_of(SolidusDrip::ShopperActivity).to(
+        receive(:cart_activity).with('created'))
       create(:order)
     end
   end
 
-  describe '#update_cart_activity' do
+  describe '#update_drip_activity' do
     it "triggers as an update_hook" do
-      expect_any_instance_of(SolidusDrip::ShopperActivity).to receive(:cart).with('updated')
+      expect_any_instance_of(SolidusDrip::ShopperActivity).to(
+        receive(:cart_activity).with('updated'))
       order.recalculate
     end
   end
