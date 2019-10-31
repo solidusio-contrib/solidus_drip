@@ -13,7 +13,7 @@ module SolidusDrip
       # @see SolidusDrip::ShopperActivity
       #
       def create_cart_activity
-        SolidusDrip::ShopperActivity.new(self).cart('created')
+        SolidusDrip::ShopperActivity.new(self).cart_activity('created')
       end
 
       ##
@@ -24,7 +24,7 @@ module SolidusDrip
       # @see SolidusDrip::ShopperActivity
       #
       def update_cart_activity
-        SolidusDrip::ShopperActivity.new(self).cart('updated')
+        SolidusDrip::ShopperActivity.new(self).cart_activity('updated')
       end
 
       ::Spree::Order.prepend self

@@ -13,5 +13,17 @@ module SolidusDrip
         c.account_id = drip_account_id
       end
     end
+
+    private
+
+    ##
+    # When a response is not successful this method should be called
+    # to handle it appropriately. Currently it logs the bad request and does
+    # not stop the execution flow. A failed response from Drip shouldn't affect
+    # the user experience with the site.
+    #
+    def handle_error_response(response)
+      Rails.logger.error("SOLIDUS DRIP | #{response.body.dig('error', 'message')}")
+    end
   end
 end
