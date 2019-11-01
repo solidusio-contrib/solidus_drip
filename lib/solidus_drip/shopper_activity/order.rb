@@ -6,8 +6,8 @@ module SolidusDrip
       attr_accessor :order
 
       ##
-      # ShopperActivity relies on order data to be useful. We call super to
-      # initialize the client and then we set the order attribute to be used
+      # ShopperActivity::Order relies on order data to be useful. We call super
+      # to initialize the client and then we set the order attribute to be used
       # in the API calls.
       #
       # @param order [Spree::Order] the order to be recorded
