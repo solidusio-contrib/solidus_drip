@@ -8,7 +8,7 @@ RSpec.describe Spree::Order do
 
   describe '#create_cart_activity' do
     it "triggers on create" do
-      expect_any_instance_of(SolidusDrip::ShopperActivity).to(
+      expect_any_instance_of(SolidusDrip::ShopperActivity::Order).to(
         receive(:cart_activity).with('created')
 )
       create(:order)

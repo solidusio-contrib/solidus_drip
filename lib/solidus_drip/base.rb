@@ -2,6 +2,8 @@
 
 module SolidusDrip
   class Base
+    include Spree::Core::Engine.routes.url_helpers
+
     attr_accessor :client
 
     def initialize(*_args)

@@ -20,7 +20,7 @@ module SolidusDrip
       #
       # This method is called as part of the Spree::Order.update_hooks
       #
-      # @see SolidusDrip::ShopperActivity
+      # @see SolidusDrip::ShopperActivity::Order
       #
       def update_drip_activity
         # If the order is complete it is no longer considered cart data
@@ -38,7 +38,7 @@ module SolidusDrip
       end
 
       def drip_shopper_activity
-        @drip_shopper_activity ||= SolidusDrip::ShopperActivity.new(self)
+        @drip_shopper_activity ||= SolidusDrip::ShopperActivity::Order.new(self)
       end
 
       ::Spree::Order.prepend self
