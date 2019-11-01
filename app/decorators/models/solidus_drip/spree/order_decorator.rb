@@ -5,13 +5,13 @@ module SolidusDrip
     module OrderDecorator
       def self.prepended(base)
         base.after_create(proc { |order|
-          order.drip_shopper_activity.cart_activity('created')
+          order.drip.cart_activity('created')
         })
         base.state_machine.after_transition(to: :complete, do: proc { |order|
-          order.drip_shopper_activity.order_activity('placed')
+          order.drip.order_activity('placed')
         })
         base.state_machine.after_transition(to: :canceled, do: proc { |order|
-          order.drip_shopper_activity.order_activity('canceled')
+          order.drip.order_activity('canceled')
         })
       end
 
@@ -26,19 +26,19 @@ module SolidusDrip
         # If the order is complete it is no longer considered cart data
         if completed?
           if shipment_state_changed? && shipped?
-            drip_shopper_activity.order_activity('fulfilled')
+            drip.order_activity('fulfilled')
           end
           if payment_state_changed? && paid?
-            drip_shopper_activity.order_activity('paid')
+            drip.order_activity('paid')
           end
-          drip_shopper_activity.order_activity('updated')
+          drip.order_activity('updated')
         else
-          drip_shopper_activity.cart_activity('updated')
+          drip.cart_activity('updated')
         end
       end
 
-      def drip_shopper_activity
-        @drip_shopper_activity ||= SolidusDrip::ShopperActivity::Order.new(self)
+      def drip
+        @drip ||= SolidusDrip::ShopperActivity::Order.new(self)
       end
 
       ::Spree::Order.prepend self
