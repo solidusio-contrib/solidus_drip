@@ -8,5 +8,6 @@ RSpec.configure do |config|
                                   })
     allow_any_instance_of(Drip::Client).to receive(:create_cart_activity_event).and_return(response)
     allow_any_instance_of(Drip::Client).to receive(:create_order_activity_event).and_return(response)
+    allow_any_instance_of(Drip::Client).to receive(:create_product_activity_event).and_return(response)
   end
 end
