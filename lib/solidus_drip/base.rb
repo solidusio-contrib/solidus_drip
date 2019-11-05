@@ -7,18 +7,9 @@ module SolidusDrip
     attr_accessor :client
 
     def initialize(*_args)
-      # Attempt to get encrypted credentials or fallback to environment variables
-      if Rails.application.try(:credentials).present?
-        drip_api_key = Rails.application.credentials.drip[:api_key]
-        drip_account_id = Rails.application.credentials.drip[:account_id]
-      else
-        drip_api_key = ENV['DRIP_API_KEY']
-        drip_account_id = ENV['DRIP_ACCOUNT_ID']
-      end
-
       @client = ::Drip::Client.new do |c|
-        c.api_key = drip_api_key
-        c.account_id = drip_account_id
+        c.api_key = ENV['DRIP_API_KEY']
+        c.account_id = ENV['DRIP_ACCOUNT_ID']
       end
     end
 
