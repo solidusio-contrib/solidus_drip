@@ -40,7 +40,7 @@ module SolidusDrip
         response = client.create_product_activity_event(data)
         handle_error_response(response) if !response.success?
 
-        response
+        response.success?
       end
     end
   end

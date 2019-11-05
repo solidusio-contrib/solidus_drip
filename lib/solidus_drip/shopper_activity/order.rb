@@ -27,7 +27,7 @@ module SolidusDrip
         response = client.create_cart_activity_event(cart_data(action))
         handle_error_response(response) if !response.success?
 
-        response
+        response.success?
       end
 
       ##
@@ -41,7 +41,7 @@ module SolidusDrip
         response = client.create_order_activity_event(order_data(action))
         handle_error_response(response) if !response.success?
 
-        response
+        response.success?
       end
 
       private
