@@ -19,6 +19,13 @@ bundle
 bundle exec rails g solidus_drip:install
 ```
 
+Add your Drip credentials as environment variables.
+
+```ruby
+ENV['DRIP_API_KEY'] = 'YOUR_API_KEY'
+ENV['DRIP_ACCOUNT_ID'] = 'YOUR_ACCOUNT_ID'
+```
+
 Testing
 -------
 
