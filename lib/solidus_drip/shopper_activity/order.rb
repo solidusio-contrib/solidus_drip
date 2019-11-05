@@ -24,7 +24,33 @@ module SolidusDrip
       # @see https://developer.drip.com/#cart-activity
       #
       def cart_activity(action)
-        data = {
+        response = client.create_cart_activity_event(cart_data(action))
+        handle_error_response(response) if !response.success?
+
+        response
+      end
+
+      ##
+      # Order Activity helps identify a user's lifetime value by tracking the values
+      #
+      # @param action [String] the cart action, `placed`, `updated`, `paid`,
+      #   `fulfilled`, `refunded`, or `canceled`
+      # @see https://developer.drip.com/#order-activity
+      #
+      def order_activity(action)
+        response = client.create_order_activity_event(order_data(action))
+        handle_error_response(response) if !response.success?
+
+        response
+      end
+
+      private
+
+      ##
+      # Formats data to be used in Drip cart calls
+      #
+      def cart_data(action)
+        {
           provider: 'solidus',
           email: order.email,
           action: action,
@@ -46,24 +72,16 @@ module SolidusDrip
               discounts: line_item.promo_total.to_f,
               total: line_item.total.to_f,
               product_url: product_url(line_item.product)
-            }
+            }.compact
           end
         }
-
-        response = client.create_cart_activity_event(data)
-        handle_error_response(response) if !response.success?
-
-        response
       end
 
       ##
-      # Order Activity helps identify a user's lifetime value by tracking the values
+      # Formats data to be used in Drip order calls
       #
-      # @param action [String] the cart action, `placed`, `updated`, `paid`,
-      #   `fulfilled`, `refunded`, or `canceled`
-      #
-      def order_activity(action)
-        data = {
+      def order_data(action)
+        {
           provider: 'solidus',
           email: order.email,
           action: action,
@@ -87,7 +105,7 @@ module SolidusDrip
               taxes: line_item.additional_tax_total.to_f,
               total: line_item.total.to_f,
               product_url: product_url(line_item.product)
-            }
+            }.compact
           end,
           billing_address: {
             first_name: order.billing_address.firstname,
@@ -100,7 +118,7 @@ module SolidusDrip
             postal_code: order.billing_address.zipcode,
             country: order.billing_address.country&.name,
             phone: order.billing_address.phone
-          },
+          }.compact,
           shipping_address: {
             first_name: order.shipping_address.firstname,
             last_name: order.shipping_address.lastname,
@@ -112,13 +130,8 @@ module SolidusDrip
             postal_code: order.shipping_address.zipcode,
             country: order.shipping_address.country&.name,
             phone: order.shipping_address.phone
-          }
+          }.compact
         }
-
-        response = client.create_order_activity_event(data)
-        handle_error_response(response) if !response.success?
-
-        response
       end
     end
   end
