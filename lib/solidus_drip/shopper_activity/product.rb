@@ -47,7 +47,7 @@ module SolidusDrip
           price: variant.price.to_f,
           inventory: variant.total_on_hand,
           product_url: product_url(variant.product)
-        }
+        }.compact
       end
     end
   end

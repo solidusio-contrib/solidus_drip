@@ -74,7 +74,7 @@ module SolidusDrip
               product_url: product_url(line_item.product)
             }.compact
           end
-        }
+        }.compact
       end
 
       ##
@@ -131,7 +131,7 @@ module SolidusDrip
             country: order.shipping_address.country&.name,
             phone: order.shipping_address.phone
           }.compact
-        }
+        }.compact
       end
     end
   end
