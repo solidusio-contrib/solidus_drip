@@ -24,23 +24,30 @@ module SolidusDrip
       # @see https://developer.drip.com/#product-activity
       #
       def product_activity(action)
-        data = {
-          provider: 'solidus',
-          action: action,
-          product_id: variant.product_id,
-          product_variant_id: variant.id,
-          sku: variant.sku,
-          name: variant.name,
-          categories: variant.product.taxons.pluck(:name),
-          price: variant.price,
-          inventory: variant.total_on_hand,
-          product_url: product_url(variant.product)
-        }
-
-        response = client.create_product_activity_event(data)
+        response = client.create_product_activity_event(product_data(action))
         handle_error_response(response) if !response.success?
 
         response.success?
+      end
+
+      private
+
+      ##
+      # Formats data to be used in Drip product calls
+      #
+      def product_data(action)
+        {
+          provider: 'solidus',
+          action: action,
+          product_id: variant.product_id.to_s,
+          product_variant_id: variant.id.to_s,
+          sku: variant.sku,
+          name: variant.name,
+          categories: variant.product.taxons.pluck(:name),
+          price: variant.price.to_f,
+          inventory: variant.total_on_hand,
+          product_url: product_url(variant.product)
+        }
       end
     end
   end
