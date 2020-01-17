@@ -9,8 +9,6 @@ module SolidusDrip
         append_file 'vendor/assets/javascripts/spree/frontend/all.js', "//= require spree/frontend/solidus_drip\n"
       end
 
-      def add_stylesheets; end
-
       def add_migrations
         run 'bundle exec rake railties:install:migrations FROM=solidus_drip'
       end
@@ -20,7 +18,7 @@ module SolidusDrip
         if run_migrations
           run 'bundle exec rake db:migrate'
         else
-          puts 'Skipping rake db:migrate, don\'t forget to run it!'
+          puts 'Skipping rake db:migrate, don\'t forget to run it!' # rubocop:disable Rails/Output
         end
       end
     end
