@@ -33,6 +33,12 @@ namespace :drip do
       drip_client.create_order_activity_events(order_activities)
     end
 
+    # Incomplete Orders
+    # Filtering out orders that do not have user information
+    Spree::Order.incomplete.where('user_id IS NOT NULL OR email IS NOT NULL').find_each do |order|
+      order.drip.cart_activity('created')
+    end
+
     puts 'Drip Order Import Complete!'
   end
 end
