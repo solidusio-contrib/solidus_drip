@@ -8,7 +8,10 @@ module SolidusDrip
           variant.drip.product_activity('created')
         })
         base.after_update(proc { |variant|
-          variant.drip.product_activity('updated')
+          variant.drip.product_activity('updated') unless discarded?
+        })
+        base.after_discard(proc { |variant|
+          variant.drip.product_activity('deleted')
         })
         base.after_destroy(proc { |variant|
           variant.drip.product_activity('deleted')

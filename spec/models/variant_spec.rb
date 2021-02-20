@@ -19,8 +19,16 @@ RSpec.describe Spree::Variant do
       variant.update(updated_at: Time.current)
     end
 
+    it "triggers on discard" do
+      expect(drip).to(receive(:product_activity).with('deleted'))
+      variant.discard
+    end
+
     it "triggers on destroy" do
       expect(drip).to(receive(:product_activity).with('deleted'))
+      # This will emit a deprecation warning but we should keep this because
+      # after Solidus 3.0 this will actually test that we call the deleted
+      # activity even the record is actually destroyed.
       variant.destroy
     end
   end
