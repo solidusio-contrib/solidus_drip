@@ -110,8 +110,6 @@ module SolidusDrip
             }.compact
           end,
           billing_address: {
-            first_name: order.billing_address.firstname,
-            last_name: order.billing_address.lastname,
             company: order.billing_address.company,
             address_1: order.billing_address.address1,
             address_2: order.billing_address.address2,
@@ -120,10 +118,8 @@ module SolidusDrip
             postal_code: order.billing_address.zipcode,
             country: order.billing_address.country&.name,
             phone: order.billing_address.phone
-          }.compact,
+          }.merge(address_attributes(order.billing_address)).compact,
           shipping_address: {
-            first_name: order.shipping_address.firstname,
-            last_name: order.shipping_address.lastname,
             company: order.shipping_address.company,
             address_1: order.shipping_address.address1,
             address_2: order.shipping_address.address2,
@@ -132,8 +128,24 @@ module SolidusDrip
             postal_code: order.shipping_address.zipcode,
             country: order.shipping_address.country&.name,
             phone: order.shipping_address.phone
-          }.compact
+          }.merge(address_attributes(order.shipping_address)).compact
         }.compact
+      end
+
+      def address_attributes(address)
+        if SolidusSupport.combined_first_and_last_name_in_address?
+          name = ::Spree::Address::Name.new(address.name)
+
+          {
+            first_name: name.first_name,
+            last_name: name.last_name,
+          }
+        else
+          {
+            first_name: order.shipping_address.firstname,
+            last_name: order.shipping_address.lastname,
+          }
+        end
       end
     end
   end
