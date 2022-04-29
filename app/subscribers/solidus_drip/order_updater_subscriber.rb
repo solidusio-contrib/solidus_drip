@@ -1,6 +1,7 @@
 module SolidusDrip
   module OrderUpdaterSubscriber
     include ::Spree::Event::Subscriber
+    include ::SolidusSupport::LegacyEventCompat::Subscriber
 
     event_action :order_recalculated
     event_action :order_finalized
