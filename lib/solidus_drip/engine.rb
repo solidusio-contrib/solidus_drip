@@ -15,5 +15,13 @@ module SolidusDrip
     config.generators do |g|
       g.test_framework :rspec
     end
+
+    initializer 'solidus_drip.pub_sub' do |app|
+      unless SolidusSupport::LegacyEventCompat.using_legacy?
+        app.reloader.to_prepare do
+          SolidusDrip::OrderUpdaterSubscriber.omnes_subscriber.subscribe_to(::Spree::Bus)
+        end
+      end
+    end
   end
 end
