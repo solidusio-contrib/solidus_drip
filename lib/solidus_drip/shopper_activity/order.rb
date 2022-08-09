@@ -53,6 +53,7 @@ module SolidusDrip
         {
           provider: 'solidus',
           email: order.email,
+          person_id: order.email.nil? ? order.guest_token : nil,
           action: action,
           occurred_at: order.updated_at.iso8601,
           cart_id: order.id.to_s,
